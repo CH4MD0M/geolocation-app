@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 
 // formik
 import { Formik } from "formik";
@@ -8,6 +8,7 @@ import { Formik } from "formik";
 import KeyboardAvoidingWrapper from "./../components/UI/KeyboardAvoidingWrapper";
 // Icons
 import { Octicons, Fontisto, Ionicons } from "@expo/vector-icons";
+
 // Styles
 import {
     StyledContainer,
@@ -29,10 +30,42 @@ import {
     Colors,
 } from "./../components/styles";
 // Colors
-const { darkLight, brand } = Colors;
+const { primary, darkLight, brand } = Colors;
+// Back-End
+import axios from "axios";
 
 const SignInScreen = ({ navigation }) => {
     const [hidePassword, setHidePassword] = useState(true);
+    const [message, setMessage] = useState();
+    const [messageType, setMessageType] = useState();
+
+    const handleSignIn = (credentials, setSubmitting) => {
+        handleMessage(null);
+        const url = "https://fierce-earth-37794.herokuapp.com/user/signin";
+        axios
+            .post(url, credentials)
+            .then((response) => {
+                const result = response.data;
+                const { message, status, data } = result;
+
+                if (status !== "SUCCESS") {
+                    handleMessage(message, status);
+                } else {
+                    navigation.navigate("Main", { ...data });
+                }
+                setSubmitting(false);
+            })
+            .catch((error) => {
+                console.log(error.response);
+                setSubmitting(false);
+                handleMessage(error.response.data.message);
+            });
+    };
+
+    const handleMessage = (message, type = "FAILED") => {
+        setMessage(message);
+        setMessageType(type);
+    };
     return (
         <KeyboardAvoidingWrapper>
             <StyledContainer>
@@ -41,9 +74,15 @@ const SignInScreen = ({ navigation }) => {
                     <PageTitle>Sign In</PageTitle>
                     <Formik
                         initialValues={{ email: "", password: "" }}
-                        onSubmit={(values) => {
-                            // console.log(values);
-                            navigation.navigate("Main");
+                        onSubmit={(values, { setSubmitting }) => {
+                            if (values.email == "" || values.password == "") {
+                                handleMessage(
+                                    "아이디 비밀번호를 입력해 주세요."
+                                );
+                                setSubmitting(false);
+                            } else {
+                                handleSignIn(values, setSubmitting);
+                            }
                         }}
                     >
                         {({
@@ -51,6 +90,7 @@ const SignInScreen = ({ navigation }) => {
                             handleBlur,
                             handleSubmit,
                             values,
+                            isSubmitting,
                         }) => (
                             <StyledFormArea>
                                 <MyTextInput
@@ -76,12 +116,22 @@ const SignInScreen = ({ navigation }) => {
                                     hidePassword={hidePassword}
                                     setHidePassword={setHidePassword}
                                 />
-                                <MsgBox></MsgBox>
-                                <StyledButton onPress={handleSubmit}>
-                                    <ButtonText>Login</ButtonText>
-                                </StyledButton>
-                                <Line />
+                                <MsgBox type={messageType}>{message}</MsgBox>
+                                {!isSubmitting && (
+                                    <StyledButton onPress={handleSubmit}>
+                                        <ButtonText>Login</ButtonText>
+                                    </StyledButton>
+                                )}
+                                {isSubmitting && (
+                                    <StyledButton disabled={true}>
+                                        <ActivityIndicator
+                                            size="large"
+                                            color={primary}
+                                        />
+                                    </StyledButton>
+                                )}
 
+                                <Line />
                                 <ExtraView>
                                     <ExtraText>
                                         아직 회원이 아니신가요?

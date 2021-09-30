@@ -11,21 +11,25 @@ import {
     Line,
 } from "./../components/styles";
 
-const Main = () => {
+const Main = ({ navigation, route }) => {
+    console.log(route);
+    const { name, email } = route.params.user;
     return (
         <>
             <StatusBar style="light" />
             <InnerContainer>
                 <InnerContainer />
                 <MainContainer>
-                    <PageTitle verified={true}>
-                        안녕하세요! UserName님
-                    </PageTitle>
-                    {/* <SubTitle welcome={true}>User Name</SubTitle> */}
-                    {/* <SubTitle welcome={true}>email@gmail.com</SubTitle> */}
+                    <PageTitle verified={true}>안녕하세요! {name}님</PageTitle>
+                    <PageTitle verified={true}>{email}</PageTitle>
+
                     <StyledFormArea>
                         <Line />
-                        <StyledButton onPress={() => {}}>
+                        <StyledButton
+                            onPress={() => {
+                                navigation.navigate("SignIn");
+                            }}
+                        >
                             <ButtonText>로그아웃</ButtonText>
                         </StyledButton>
                     </StyledFormArea>

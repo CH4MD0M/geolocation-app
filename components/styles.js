@@ -58,7 +58,7 @@ export const PageTitle = styled.Text`
     ${(props) =>
         props.verified &&
         `
-    font-size: 35px;
+    font-size: 25px;
   `}
 `;
 
@@ -113,6 +113,7 @@ export const ButtonText = styled.Text`
 export const MsgBox = styled.Text`
     text-align: center;
     font-size: 13px;
+    color: ${(props) => (props.type == "SUCCESS" ? "green" : "red")};
 `;
 
 export const Line = styled.View`
