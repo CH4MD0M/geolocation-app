@@ -56,7 +56,7 @@ const SignUpScreen = ({ navigation }) => {
             .catch((error) => {
                 setSubmitting(false);
                 handleMessage("접속 오류! 네트워크 연결 설정을 확인하세요.");
-                console.log(error.toJSON());
+                // console.log(error.toJSON());
             });
     };
 

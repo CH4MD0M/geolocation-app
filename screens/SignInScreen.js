@@ -56,7 +56,7 @@ const SignInScreen = ({ navigation }) => {
                 setSubmitting(false);
             })
             .catch((error) => {
-                console.log(error.response);
+                // console.log(error.response);
                 setSubmitting(false);
                 handleMessage(error.response.data.message);
             });

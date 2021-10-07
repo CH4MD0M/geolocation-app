@@ -13,7 +13,7 @@ export const Colors = {
     red: "#EF4444",
 };
 
-const { primary, secondary, tertiary, darkLight, brand, green } = Colors;
+const { primary, secondary, tertiary, darkLight, brand } = Colors;
 
 export const StyledContainer = styled.View`
     flex: 1;
@@ -21,6 +21,13 @@ export const StyledContainer = styled.View`
     padding-top: ${StatusBarHeight + 10}px;
 `;
 
+export const GeolocationContainer = styled.View`
+    width: 100%;
+    flex: 1;
+    margin-top: 130px;
+    justify-content: flex-end;
+    align-items: center;
+`;
 export const SignInContainer = styled.View`
     width: 100%;
     flex: 1;
