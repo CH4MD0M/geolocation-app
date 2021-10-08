@@ -1,7 +1,13 @@
 import React, { useState } from "react";
+import { View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import KeyboardAvoidingWrapper from "./../components/UI/KeyboardAvoidingWrapper";
+import { Octicons, Ionicons } from "@expo/vector-icons";
+
+// formik
 import { Formik } from "formik";
 
+// Styles
 import {
     StyledContainer,
     PageTitle,
@@ -23,11 +29,7 @@ import {
     Colors,
 } from "./../components/styles";
 
-import { View, TouchableOpacity, ActivityIndicator } from "react-native";
-
 const { primary, darkLight, brand } = Colors;
-
-import { Octicons, Ionicons } from "@expo/vector-icons";
 
 import axios from "axios";
 
@@ -66,121 +68,131 @@ const SignUpScreen = ({ navigation }) => {
     };
 
     return (
-        <StyledContainer>
-            <StatusBar style="dark" />
-            <SignUpContainer>
-                <PageTitle>Sign Up</PageTitle>
+        <KeyboardAvoidingWrapper>
+            <StyledContainer>
+                <StatusBar style="dark" />
+                <SignUpContainer>
+                    <PageTitle>회원가입</PageTitle>
 
-                <Formik
-                    initialValues={{
-                        name: "",
-                        email: "",
-                        password: "",
-                        passwordConfirm: "",
-                    }}
-                    onSubmit={(values, { setSubmitting }) => {
-                        if (
-                            values.email == "" ||
-                            values.password == "" ||
-                            values.name == "" ||
-                            values.passwordConfirm == ""
-                        ) {
-                            handleMessage("모든 항목을 입력해주세요.");
-                            setSubmitting(false);
-                        } else if (values.password !== values.passwordConfirm) {
-                            handleMessage("패스워드가 일치하지 않습니다.");
-                            setSubmitting(false);
-                        } else {
-                            handleSignup(values, setSubmitting);
-                        }
-                    }}
-                >
-                    {({
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        values,
-                        isSubmitting,
-                    }) => (
-                        <StyledFormArea>
-                            <MyTextInput
-                                label="아이디"
-                                placeholder="아이디"
-                                placeholderTextColor={darkLight}
-                                onChangeText={handleChange("name")}
-                                onBlur={handleBlur("name")}
-                                value={values.name}
-                                icon="person"
-                            />
-                            <MyTextInput
-                                label="이메일 주소"
-                                placeholder="sample@gmail.com"
-                                placeholderTextColor={darkLight}
-                                onChangeText={handleChange("email")}
-                                onBlur={handleBlur("email")}
-                                value={values.email}
-                                keyboardType="email-address"
-                                icon="mail"
-                            />
+                    <Formik
+                        initialValues={{
+                            name: "",
+                            email: "",
+                            password: "",
+                            passwordConfirm: "",
+                        }}
+                        onSubmit={(values, { setSubmitting }) => {
+                            if (
+                                values.email == "" ||
+                                values.password == "" ||
+                                values.name == "" ||
+                                values.passwordConfirm == ""
+                            ) {
+                                handleMessage("모든 항목을 입력해주세요.");
+                                setSubmitting(false);
+                            } else if (
+                                values.password !== values.passwordConfirm
+                            ) {
+                                handleMessage("패스워드가 일치하지 않습니다.");
+                                setSubmitting(false);
+                            } else {
+                                handleSignup(values, setSubmitting);
+                            }
+                        }}
+                    >
+                        {({
+                            handleChange,
+                            handleBlur,
+                            handleSubmit,
+                            values,
+                            isSubmitting,
+                        }) => (
+                            <StyledFormArea>
+                                <MyTextInput
+                                    label="아이디"
+                                    placeholder="아이디"
+                                    placeholderTextColor={darkLight}
+                                    onChangeText={handleChange("name")}
+                                    onBlur={handleBlur("name")}
+                                    value={values.name}
+                                    icon="person"
+                                />
+                                <MyTextInput
+                                    label="이메일 주소"
+                                    placeholder="sample@gmail.com"
+                                    placeholderTextColor={darkLight}
+                                    onChangeText={handleChange("email")}
+                                    onBlur={handleBlur("email")}
+                                    value={values.email}
+                                    keyboardType="email-address"
+                                    icon="mail"
+                                />
 
-                            <MyTextInput
-                                label="비밀번호"
-                                placeholder="* * * * * * * *"
-                                placeholderTextColor={darkLight}
-                                onChangeText={handleChange("password")}
-                                onBlur={handleBlur("password")}
-                                value={values.password}
-                                secureTextEntry={hidePassword}
-                                icon="lock"
-                                isPassword={true}
-                                hidePassword={hidePassword}
-                                setHidePassword={setHidePassword}
-                            />
-                            <MyTextInput
-                                label="비밀번호 확인"
-                                placeholder="* * * * * * * *"
-                                placeholderTextColor={darkLight}
-                                onChangeText={handleChange("passwordConfirm")}
-                                onBlur={handleBlur("passwordConfirm")}
-                                value={values.passwordConfirm}
-                                secureTextEntry={hidePassword}
-                                icon="lock"
-                                isPassword={true}
-                                hidePassword={hidePassword}
-                                setHidePassword={setHidePassword}
-                            />
-                            <MsgBox type={messageType}>{message}</MsgBox>
+                                <MyTextInput
+                                    label="비밀번호"
+                                    placeholder="* * * * * * * *"
+                                    placeholderTextColor={darkLight}
+                                    onChangeText={handleChange("password")}
+                                    onBlur={handleBlur("password")}
+                                    value={values.password}
+                                    secureTextEntry={hidePassword}
+                                    icon="lock"
+                                    isPassword={true}
+                                    hidePassword={hidePassword}
+                                    setHidePassword={setHidePassword}
+                                />
+                                <MyTextInput
+                                    label="비밀번호 확인"
+                                    placeholder="* * * * * * * *"
+                                    placeholderTextColor={darkLight}
+                                    onChangeText={handleChange(
+                                        "passwordConfirm"
+                                    )}
+                                    onBlur={handleBlur("passwordConfirm")}
+                                    value={values.passwordConfirm}
+                                    secureTextEntry={hidePassword}
+                                    icon="lock"
+                                    isPassword={true}
+                                    hidePassword={hidePassword}
+                                    setHidePassword={setHidePassword}
+                                />
+                                <MsgBox type={messageType}>{message}</MsgBox>
 
-                            {!isSubmitting && (
-                                <StyledButton onPress={handleSubmit}>
-                                    <ButtonText>Signup</ButtonText>
-                                </StyledButton>
-                            )}
-                            {isSubmitting && (
-                                <StyledButton disabled={true}>
-                                    <ActivityIndicator
-                                        size="large"
-                                        color={primary}
-                                    />
-                                </StyledButton>
-                            )}
+                                {!isSubmitting && (
+                                    <StyledButton onPress={handleSubmit}>
+                                        <ButtonText>Signup</ButtonText>
+                                    </StyledButton>
+                                )}
+                                {isSubmitting && (
+                                    <StyledButton disabled={true}>
+                                        <ActivityIndicator
+                                            size="large"
+                                            color={primary}
+                                        />
+                                    </StyledButton>
+                                )}
 
-                            <Line />
-                            <ExtraView>
-                                <ExtraText>이미 계정이 있으신가요? </ExtraText>
-                                <TextLink
-                                    onPress={() =>
-                                        navigation.navigate("SignIn")
-                                    }
-                                >
-                                    <TextLinkContent>로그인</TextLinkContent>
-                                </TextLink>
-                            </ExtraView>
-                        </StyledFormArea>
-                    )}
-                </Formik>
-            </SignUpContainer>
-        </StyledContainer>
+                                <Line />
+                                <ExtraView>
+                                    <ExtraText>
+                                        이미 계정이 있으신가요?{" "}
+                                    </ExtraText>
+                                    <TextLink
+                                        onPress={() =>
+                                            navigation.navigate("SignIn")
+                                        }
+                                    >
+                                        <TextLinkContent>
+                                            로그인
+                                        </TextLinkContent>
+                                    </TextLink>
+                                </ExtraView>
+                            </StyledFormArea>
+                        )}
+                    </Formik>
+                </SignUpContainer>
+            </StyledContainer>
+        </KeyboardAvoidingWrapper>
     );
 };
 

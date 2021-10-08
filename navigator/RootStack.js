@@ -1,8 +1,9 @@
 import React from "react";
+// CredentialsContext
+import { CredentialsContext } from "../store/CredentialsContext";
 
 // Colors
 import { Colors } from "../components/styles";
-const { primary, tertiary } = Colors;
 
 // React Navigation
 import { NavigationContainer } from "@react-navigation/native";
@@ -12,13 +13,10 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 // Screens
 import SignInScreen from "../screens/SignInScreen";
 import SignUpScreen from "../screens/SignUpScreen";
-
 import HomeScreen from "../screens/HomeScreen";
 import GeolocationScreen from "../screens/GeolocationScreen";
 
-import Main from "../screens/Main";
-import { SafeAreaView } from "react-native-safe-area-context";
-
+// Drawer
 const Drawer = createDrawerNavigator();
 const MyDrawer = () => {
     return (
@@ -27,12 +25,12 @@ const MyDrawer = () => {
                 headerStyle: {
                     backgroundColor: "transparent",
                 },
-                headerTintColor: tertiary,
+                headerTintColor: "#1F2937",
                 headerTransparent: true,
                 headerTitle: "",
                 headerLeftContainerStyle: {
-                    paddingLeft: 20,
-                    paddingTop: 100,
+                    paddingLeft: 10,
+                    paddingTop: 50,
                 },
             }}
             initialRouteName="Home"
@@ -42,30 +40,47 @@ const MyDrawer = () => {
         </Drawer.Navigator>
     );
 };
-const Stack = createStackNavigator();
 
+// Stack
+const Stack = createStackNavigator();
 const RootStack = () => {
     return (
-        <NavigationContainer style={{ backgroundColor: "red" }}>
-            <Stack.Navigator
-                screenOptions={{
-                    headerStyle: {
-                        backgroundColor: "transparent",
-                    },
-                    headerTintColor: tertiary,
-                    headerTransparent: true,
-                    headerTitle: "",
-                    headerLeftContainerStyle: {
-                        paddingLeft: 20,
-                    },
-                }}
-                initialRouteName="SignIn"
-            >
-                <Stack.Screen name="SignIn" component={SignInScreen} />
-                <Stack.Screen name="SignUp" component={SignUpScreen} />
-                <Stack.Screen name="Main" component={MyDrawer} />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <CredentialsContext.Consumer>
+            {({ storedCredentials }) => (
+                <NavigationContainer>
+                    <Stack.Navigator
+                        screenOptions={{
+                            headerStyle: {
+                                backgroundColor: "transparent",
+                            },
+                            headerTintColor: "#1F2937",
+                            headerTransparent: true,
+                            headerTitle: "",
+                            headerLeftContainerStyle: {
+                                paddingLeft: 10,
+                                paddingTop: 50,
+                            },
+                        }}
+                        initialRouteName="SignIn"
+                    >
+                        {storedCredentials ? (
+                            <Stack.Screen name="Main" component={MyDrawer} />
+                        ) : (
+                            <>
+                                <Stack.Screen
+                                    name="SignIn"
+                                    component={SignInScreen}
+                                />
+                                <Stack.Screen
+                                    name="SignUp"
+                                    component={SignUpScreen}
+                                />
+                            </>
+                        )}
+                    </Stack.Navigator>
+                </NavigationContainer>
+            )}
+        </CredentialsContext.Consumer>
     );
 };
 

@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 import { View, ActivityIndicator } from "react-native";
-
+import KeyboardAvoidingWrapper from "./../components/UI/KeyboardAvoidingWrapper";
 // formik
 import { Formik } from "formik";
-// Keyboard Avoiding View
-import KeyboardAvoidingWrapper from "./../components/UI/KeyboardAvoidingWrapper";
+
+// Back-End
+import axios from "axios";
+// CredentialsContext
+import { CredentialsContext } from "../store/CredentialsContext";
+// AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 // Icons
 import { Octicons, Fontisto, Ionicons } from "@expo/vector-icons";
-
 // Styles
 import {
     StyledContainer,
@@ -29,15 +34,18 @@ import {
     TextLinkContent,
     Colors,
 } from "./../components/styles";
+
 // Colors
 const { primary, darkLight, brand } = Colors;
-// Back-End
-import axios from "axios";
 
 const SignInScreen = ({ navigation }) => {
     const [hidePassword, setHidePassword] = useState(true);
     const [message, setMessage] = useState();
     const [messageType, setMessageType] = useState();
+
+    // credentials context
+    const { storedCredentials, setStoredCredentials } =
+        useContext(CredentialsContext);
 
     const handleSignIn = (credentials, setSubmitting) => {
         handleMessage(null);
@@ -51,27 +59,45 @@ const SignInScreen = ({ navigation }) => {
                 if (status !== "SUCCESS") {
                     handleMessage(message, status);
                 } else {
-                    navigation.navigate("Main", { ...data });
+                    persistLogin({ ...data }, message, status);
                 }
                 setSubmitting(false);
             })
             .catch((error) => {
-                // console.log(error.response);
+                console.log(error);
                 setSubmitting(false);
-                handleMessage(error.response.data.message);
+                // handleMessage(error.response.data.message);
             });
     };
 
-    const handleMessage = (message, type = "FAILED") => {
+    // 오류메시지 처리
+    const handleMessage = (message, type = "") => {
         setMessage(message);
         setMessageType(type);
     };
+
+    // 로그인 유지
+    const persistLogin = (credentials, message, status) => {
+        AsyncStorage.setItem(
+            "GeolocationCredentials",
+            JSON.stringify(credentials)
+        )
+            .then(() => {
+                handleMessage(message, status);
+                setStoredCredentials(credentials);
+            })
+            .catch((error) => {
+                handleMessage("로그아웃 되었습니다.");
+                console.log(error);
+            });
+    };
+
     return (
         <KeyboardAvoidingWrapper>
             <StyledContainer>
                 <StatusBar style="dark" />
                 <SignInContainer>
-                    <PageTitle>Sign In</PageTitle>
+                    <PageTitle>로그인</PageTitle>
                     <Formik
                         initialValues={{ email: "", password: "" }}
                         onSubmit={(values, { setSubmitting }) => {
@@ -93,7 +119,7 @@ const SignInScreen = ({ navigation }) => {
                             isSubmitting,
                         }) => (
                             <StyledFormArea>
-                                <MyTextInput
+                                <CustomTextInput
                                     label="이메일 주소"
                                     placeholder="sample@gmail.com"
                                     placeholderTextColor={darkLight}
@@ -103,7 +129,7 @@ const SignInScreen = ({ navigation }) => {
                                     keyboardType="email-address"
                                     icon="mail"
                                 />
-                                <MyTextInput
+                                <CustomTextInput
                                     label="비밀번호"
                                     placeholder="* * * * * * *"
                                     placeholderTextColor={darkLight}
@@ -130,7 +156,6 @@ const SignInScreen = ({ navigation }) => {
                                         />
                                     </StyledButton>
                                 )}
-
                                 <Line />
                                 <ExtraView>
                                     <ExtraText>
@@ -155,7 +180,8 @@ const SignInScreen = ({ navigation }) => {
     );
 };
 
-const MyTextInput = ({
+// CustomTextInput
+const CustomTextInput = ({
     label,
     icon,
     isPassword,
