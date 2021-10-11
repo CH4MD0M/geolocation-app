@@ -77,7 +77,6 @@ export const StyledTextInput = styled.TextInput`
     border-radius: 5px;
     font-size: 16px;
     height: 60px;
-    margin-vertical: 3px;
     background-color: ${secondary};
     margin-bottom: 10px;
     color: #1f2937;

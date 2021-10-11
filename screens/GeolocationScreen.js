@@ -1,13 +1,28 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import LocationPicker from "../components/LocationPicker";
+
+// Styles
+import {
+    StyledContainer,
+    InnerContainer,
+    MainContainer,
+} from "./../components/styles";
 
 const GeolocationScreen = () => {
     return (
-        <View>
-            <StatusBar style="light" />
-            <Text></Text>
-        </View>
+        <>
+            <StyledContainer>
+                <StatusBar style="light" />
+                <InnerContainer>
+                    <InnerContainer />
+                    <MainContainer>
+                        <LocationPicker />
+                    </MainContainer>
+                </InnerContainer>
+            </StyledContainer>
+        </>
     );
 };
 
