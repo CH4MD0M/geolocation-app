@@ -24,7 +24,7 @@ const LocationPicker = () => {
     const [Longitude, setLongitude] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [isActivate, setIsActivate] = useState(false);
-    // const [isReadyToSend, setIsReadyToSend] = useState(false);
+    const [isReadyToSend, setIsReadyToSend] = useState(false);
     const interval = useRef();
 
     useEffect(() => {
@@ -35,6 +35,14 @@ const LocationPicker = () => {
             clearInterval(interval.current);
         };
     }, [isActivate]);
+
+    useEffect(() => {
+        if (isReadyToSend) {
+            setIsReadyToSend(false);
+            return;
+        }
+        SendLocation();
+    }, [isReadyToSend]);
 
     // 위치정보 수집
     const GetLocation = async () => {
@@ -48,12 +56,12 @@ const LocationPicker = () => {
         let location = await Location.getCurrentPositionAsync({});
         setLatitude(location.coords.latitude);
         setLongitude(location.coords.longitude);
-
-        SendLocation();
+        setIsReadyToSend(true);
     };
 
     // 위치정보 전달
     const SendLocation = async () => {
+        console.log(Longitude, Latitude);
         const { email } = storedCredentials.user;
 
         try {
