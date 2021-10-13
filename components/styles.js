@@ -111,6 +111,16 @@ export const StyledButton = styled.TouchableOpacity`
     margin: 10px 0;
     height: 60px;
 `;
+export const LocationButton = styled.TouchableOpacity`
+    padding: 15px;
+    background-color: ${(props) =>
+        props.status === true ? Colors.red : Colors.main};
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    margin: 10px 0;
+    height: 60px;
+`;
 export const ButtonText = styled.Text`
     color: ${primary};
     font-size: 16px;

@@ -2,6 +2,9 @@ import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 import { View, ActivityIndicator } from "react-native";
 import KeyboardAvoidingWrapper from "./../components/UI/KeyboardAvoidingWrapper";
+
+// URL
+import { API } from "../constants/URl";
 // formik
 import { Formik } from "formik";
 
@@ -49,12 +52,13 @@ const SignInScreen = ({ navigation }) => {
 
     const handleSignIn = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = "https://fierce-earth-37794.herokuapp.com/user/signin";
+        const url = `${API}/user/signin`;
         axios
             .post(url, credentials)
             .then((response) => {
                 const result = response.data;
                 const { message, status, data } = result;
+                console.log(result);
 
                 if (status !== "SUCCESS") {
                     handleMessage(message, status);

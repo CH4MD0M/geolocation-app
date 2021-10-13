@@ -3,6 +3,8 @@ import { View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import KeyboardAvoidingWrapper from "./../components/UI/KeyboardAvoidingWrapper";
 import { Octicons, Ionicons } from "@expo/vector-icons";
+// URL
+import { API } from "../constants/URl";
 
 // formik
 import { Formik } from "formik";
@@ -41,7 +43,7 @@ const SignUpScreen = ({ navigation }) => {
     // Form handling
     const handleSignup = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = "https://fierce-earth-37794.herokuapp.com/user/signup";
+        const url = `${API}/user/signup`;
         axios
             .post(url, credentials)
             .then((response) => {
