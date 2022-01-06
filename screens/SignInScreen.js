@@ -4,7 +4,7 @@ import { View, ActivityIndicator } from "react-native";
 import KeyboardAvoidingWrapper from "./../components/UI/KeyboardAvoidingWrapper";
 
 // URL
-import { API } from "../constants/URl";
+import { URL } from "../constants/ApiUrl";
 // formik
 import { Formik } from "formik";
 
@@ -52,13 +52,13 @@ const SignInScreen = ({ navigation }) => {
 
     const handleSignIn = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = `${API}/user/signin`;
+        const url = `${URL}/auth/signIn`;
         axios
             .post(url, credentials)
             .then((response) => {
                 const result = response.data;
-                const { message, status, data } = result;
                 console.log(result);
+                const { message, status, data } = result;
 
                 if (status !== "SUCCESS") {
                     handleMessage(message, status);
@@ -68,9 +68,8 @@ const SignInScreen = ({ navigation }) => {
                 setSubmitting(false);
             })
             .catch((error) => {
-                console.log(error);
                 setSubmitting(false);
-                // handleMessage(error.response.data.message);
+                handleMessage(error.response.data.message);
             });
     };
 
@@ -81,20 +80,6 @@ const SignInScreen = ({ navigation }) => {
     };
 
     // 로그인 유지
-    const persistLogin = (credentials, message, status) => {
-        AsyncStorage.setItem(
-            "GeolocationCredentials",
-            JSON.stringify(credentials)
-        )
-            .then(() => {
-                handleMessage(message, status);
-                setStoredCredentials(credentials);
-            })
-            .catch((error) => {
-                handleMessage("로그아웃 되었습니다.");
-                console.log(error);
-            });
-    };
 
     return (
         <KeyboardAvoidingWrapper>

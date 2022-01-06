@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import KeyboardAvoidingWrapper from "./../components/UI/KeyboardAvoidingWrapper";
 import { Octicons, Ionicons } from "@expo/vector-icons";
 // URL
-import { API } from "../constants/URl";
+import { URL } from "../constants/ApiUrl";
 
 // formik
 import { Formik } from "formik";
@@ -27,7 +27,6 @@ import {
     ExtraText,
     TextLink,
     TextLinkContent,
-    SubTitle,
     Colors,
 } from "./../components/styles";
 
@@ -43,11 +42,12 @@ const SignUpScreen = ({ navigation }) => {
     // Form handling
     const handleSignup = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = `${API}/user/signup`;
+        const url = `${URL}/auth/signUp`;
         axios
             .post(url, credentials)
             .then((response) => {
                 const result = response.data;
+                // console.log(result);
                 const { status, message } = result;
 
                 if (status !== "SUCCESS") {
@@ -78,16 +78,16 @@ const SignUpScreen = ({ navigation }) => {
 
                     <Formik
                         initialValues={{
-                            name: "",
+                            displayName: "",
                             email: "",
                             password: "",
                             passwordConfirm: "",
                         }}
                         onSubmit={(values, { setSubmitting }) => {
                             if (
+                                values.displayName == "" ||
                                 values.email == "" ||
                                 values.password == "" ||
-                                values.name == "" ||
                                 values.passwordConfirm == ""
                             ) {
                                 handleMessage("모든 항목을 입력해주세요.");
@@ -111,12 +111,12 @@ const SignUpScreen = ({ navigation }) => {
                         }) => (
                             <StyledFormArea>
                                 <MyTextInput
-                                    label="아이디"
-                                    placeholder="아이디"
+                                    label="이름"
+                                    placeholder="이름"
                                     placeholderTextColor={darkLight}
-                                    onChangeText={handleChange("name")}
-                                    onBlur={handleBlur("name")}
-                                    value={values.name}
+                                    onChangeText={handleChange("displayName")}
+                                    onBlur={handleBlur("displayName")}
+                                    value={values.displayName}
                                     icon="person"
                                 />
                                 <MyTextInput
@@ -177,7 +177,7 @@ const SignUpScreen = ({ navigation }) => {
                                 <Line />
                                 <ExtraView>
                                     <ExtraText>
-                                        이미 계정이 있으신가요?{" "}
+                                        이미 계정이 있으신가요?
                                     </ExtraText>
                                     <TextLink
                                         onPress={() =>

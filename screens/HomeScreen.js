@@ -25,7 +25,7 @@ const HomeScreen = () => {
         ? storedCredentials.user
         : storedCredentials;
 
-    // LogoutHandler
+    // 로그아웃
     const logoutHandler = () => {
         AsyncStorage.removeItem("GeolocationCredentials")
             .then(() => {
